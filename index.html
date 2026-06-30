@@ -1,0 +1,695 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Naduni Warnakulasooriya — QA Automation Engineer</title>
+<meta name="description" content="Naduni Warnakulasooriya — Software Quality Assurance Engineer specializing in test automation, AI-powered QA tooling, and CI/CD.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23f0cd92%22/><text x=%2250%22 y=%2268%22 font-size=%2260%22 font-family=%22monospace%22 text-anchor=%22middle%22 fill=%22%230e1015%22>✓</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --gold:#f0cd92;
+    --gold-dim:#c9a865;
+    --gold-deep:#a9803e;
+    --ink:#0e1015;
+    --ink-soft:#161a22;
+    --ink-soft-2:#1d222c;
+    --paper:#f7f2e7;
+    --paper-2:#efe6d3;
+    --pass:#6fcf97;
+    --fail:#e8736b;
+    --text-light:#ece6d6;
+    --text-dim:#8d93a0;
+    --text-ink:#23262f;
+    --text-ink-dim:#5b5f6b;
+    --mono:'JetBrains Mono', monospace;
+    --sans:'Inter', sans-serif;
+    --maxw:1100px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--text-ink);
+    font-family:var(--sans);
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{background:var(--gold);color:var(--ink);}
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px;}
+
+  /* ---------- scroll reveal ---------- */
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ---------- top nav ---------- */
+  .nav{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(14,16,21,0.92);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(240,205,146,0.15);
+  }
+  .nav .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;}
+  .nav-logo{font-family:var(--mono);font-weight:700;color:var(--gold);font-size:14px;letter-spacing:.02em;}
+  .nav-logo span{color:var(--text-dim);}
+  .nav-links{display:flex;gap:26px;list-style:none;margin:0;padding:0;}
+  .nav-links a{
+    font-family:var(--mono);font-size:12.5px;color:var(--text-dim);
+    text-transform:lowercase;letter-spacing:.03em;transition:color .2s;
+  }
+  .nav-links a:hover{color:var(--gold);}
+  .nav-toggle{display:none;}
+
+  /* ---------- hero / terminal ---------- */
+  .hero{
+    background:var(--ink);
+    color:var(--text-light);
+    padding:150px 0 90px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::before{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 600px 400px at 85% -10%, rgba(240,205,146,0.10), transparent 60%),
+      radial-gradient(ellipse 500px 300px at -10% 100%, rgba(240,205,146,0.06), transparent 60%);
+    pointer-events:none;
+  }
+  .hero-grid{
+    position:relative;z-index:1;
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:56px;
+    align-items:center;
+  }
+  .terminal{
+    background:var(--ink-soft);
+    border:1px solid rgba(240,205,146,0.18);
+    border-radius:10px;
+    box-shadow:0 30px 60px -25px rgba(0,0,0,0.6);
+    overflow:hidden;
+  }
+  .terminal-bar{
+    display:flex;align-items:center;gap:8px;
+    padding:10px 14px;
+    background:var(--ink-soft-2);
+    border-bottom:1px solid rgba(240,205,146,0.1);
+  }
+  .dot{width:10px;height:10px;border-radius:50%;}
+  .dot.r{background:#e8736b;} .dot.y{background:#f0cd92;} .dot.g{background:#6fcf97;}
+  .terminal-title{
+    margin-left:8px;font-family:var(--mono);font-size:11.5px;color:var(--text-dim);
+  }
+  .terminal-body{
+    padding:22px 22px 26px;
+    font-family:var(--mono);
+    font-size:13.5px;
+  }
+  .terminal-body .cmd{color:var(--text-dim);}
+  .terminal-body .cmd::before{content:"❯ ";color:var(--gold);}
+  .term-line{margin:0 0 7px;white-space:pre-wrap;}
+  .pass-tag{color:var(--pass);}
+  .pass-tag::before{content:"✓ ";}
+  .suite-line{color:var(--text-dim);margin-top:14px;}
+  .suite-result{
+    margin-top:16px;padding-top:14px;border-top:1px dashed rgba(240,205,146,0.18);
+    color:var(--gold);font-weight:600;
+  }
+  .cursor{display:inline-block;width:7px;height:14px;background:var(--gold);margin-left:2px;animation:blink 1s steps(1) infinite;vertical-align:-2px;}
+  @keyframes blink{50%{opacity:0;}}
+
+  .hero-side{display:flex;flex-direction:column;align-items:flex-start;gap:22px;}
+  .avatar{
+    width:108px;height:108px;border-radius:14px;
+    background:linear-gradient(155deg, var(--gold), var(--gold-deep));
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-weight:800;font-size:36px;color:var(--ink);
+    box-shadow:0 18px 40px -16px rgba(240,205,146,0.45);
+    flex-shrink:0;
+    position:relative;
+  }
+  .avatar::after{
+    content:"";position:absolute;inset:0;border-radius:14px;
+    border:1px solid rgba(255,255,255,0.35);
+  }
+  .avatar img{
+    width:100%;height:100%;object-fit:cover;border-radius:13px;
+  }
+  .eyebrow{
+    font-family:var(--mono);font-size:12px;color:var(--gold);
+    letter-spacing:.08em;text-transform:uppercase;
+    display:flex;align-items:center;gap:8px;
+  }
+  .eyebrow .blip{width:6px;height:6px;border-radius:50%;background:var(--pass);box-shadow:0 0 0 3px rgba(111,207,151,0.18);}
+  h1.name{
+    font-family:var(--mono);font-weight:800;font-size:clamp(28px,4vw,40px);
+    margin:2px 0 0;color:#fff;letter-spacing:-0.01em;line-height:1.15;
+  }
+  .role{
+    font-family:var(--sans);font-size:16px;color:var(--text-light);
+    border-left:2px solid var(--gold);padding-left:12px;
+    max-width:340px;
+  }
+  .hero-meta{font-family:var(--mono);font-size:12px;color:var(--text-dim);line-height:1.9;}
+  .hero-meta b{color:var(--text-light);font-weight:500;}
+  .social-row{display:flex;gap:10px;flex-wrap:wrap;}
+  .icon-btn{
+    width:38px;height:38px;border-radius:8px;
+    background:var(--ink-soft);border:1px solid rgba(240,205,146,0.2);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text-light);transition:.2s;
+  }
+  .icon-btn:hover{background:var(--gold);color:var(--ink);border-color:var(--gold);transform:translateY(-2px);}
+  .icon-btn svg{width:17px;height:17px;}
+
+  /* ---------- section shell ---------- */
+  section{padding:86px 0;}
+  .section-head{
+    display:flex;align-items:baseline;justify-content:space-between;
+    margin-bottom:42px;flex-wrap:wrap;gap:10px;
+    border-bottom:1px solid rgba(35,38,47,0.1);
+    padding-bottom:18px;
+  }
+  .describe{
+    font-family:var(--mono);font-size:12px;color:var(--gold-deep);
+    text-transform:lowercase;letter-spacing:.02em;
+  }
+  .section-head h2{
+    font-family:var(--mono);font-weight:700;font-size:26px;margin:4px 0 0;color:var(--text-ink);
+  }
+  .section-count{font-family:var(--mono);font-size:12px;color:var(--text-ink-dim);}
+
+  .dark{background:var(--ink);color:var(--text-light);}
+  .dark .section-head{border-bottom-color:rgba(240,205,146,0.15);}
+  .dark .section-head h2{color:#fff;}
+  .dark .section-count{color:var(--text-dim);}
+
+  /* ---------- about ---------- */
+  #about .about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:50px;}
+  .about-text p{margin:0 0 16px;color:var(--text-ink-dim);font-size:15.5px;}
+  .facts{list-style:none;margin:0;padding:0;}
+  .facts li{
+    display:flex;gap:10px;padding:10px 0;border-bottom:1px dashed rgba(35,38,47,0.12);
+    font-family:var(--mono);font-size:13px;
+  }
+  .facts li:last-child{border-bottom:none;}
+  .facts .k{color:var(--gold-deep);min-width:78px;font-weight:600;}
+  .facts .v{color:var(--text-ink-dim);}
+
+  /* ---------- skills ---------- */
+  .skill-groups{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;}
+  .skill-card{
+    background:var(--ink-soft);border:1px solid rgba(240,205,146,0.15);
+    border-radius:10px;padding:22px;
+  }
+  .skill-card h3{
+    font-family:var(--mono);font-size:12.5px;color:var(--gold);
+    text-transform:uppercase;letter-spacing:.06em;margin:0 0 14px;
+  }
+  .tag-row{display:flex;flex-wrap:wrap;gap:8px;}
+  .tag{
+    font-family:var(--mono);font-size:12px;color:var(--text-light);
+    background:rgba(240,205,146,0.08);border:1px solid rgba(240,205,146,0.18);
+    padding:5px 10px;border-radius:6px;
+  }
+
+  /* ---------- experience timeline ---------- */
+  .suite{
+    border:1px solid rgba(35,38,47,0.12);border-radius:10px;
+    margin-bottom:14px;overflow:hidden;background:#fff;
+  }
+  .suite-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 20px;gap:14px;flex-wrap:wrap;background:var(--paper-2);
+  }
+  .suite-head-l{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;}
+  .suite-name{font-family:var(--mono);font-weight:700;font-size:14.5px;color:var(--text-ink);}
+  .suite-co{font-family:var(--mono);font-size:12px;color:var(--gold-deep);}
+  .suite-time{font-family:var(--mono);font-size:11.5px;color:var(--text-ink-dim);white-space:nowrap;}
+  .suite-body{padding:16px 20px 18px;}
+  .suite-body ul{margin:0;padding-left:0;list-style:none;}
+  .suite-body li{
+    font-size:14px;color:var(--text-ink-dim);padding:5px 0 5px 22px;position:relative;
+  }
+  .suite-body li::before{
+    content:"✓";position:absolute;left:0;color:var(--pass);font-family:var(--mono);font-weight:700;
+  }
+
+  /* ---------- projects ---------- */
+  .proj-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+  .proj-card{
+    background:var(--ink-soft);border:1px solid rgba(240,205,146,0.15);
+    border-radius:10px;padding:24px;display:flex;flex-direction:column;gap:12px;
+    transition:.2s;
+  }
+  .proj-card:hover{border-color:var(--gold);transform:translateY(-3px);}
+  .proj-top{display:flex;align-items:center;justify-content:space-between;gap:10px;}
+  .proj-title{font-family:var(--mono);font-weight:700;font-size:15.5px;color:#fff;}
+  .proj-link{
+    font-family:var(--mono);font-size:11px;color:var(--gold);
+    border:1px solid rgba(240,205,146,0.3);padding:4px 9px;border-radius:6px;flex-shrink:0;
+  }
+  .proj-link:hover{background:var(--gold);color:var(--ink);}
+  .proj-desc{color:var(--text-dim);font-size:13.5px;}
+  .proj-stack{font-family:var(--mono);font-size:11px;color:var(--gold-dim);}
+
+  .work-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  .work-card{
+    border:1px solid rgba(35,38,47,0.12);border-radius:10px;padding:16px 18px;background:#fff;
+  }
+  .work-card h4{margin:0 0 6px;font-family:var(--mono);font-size:13.5px;color:var(--text-ink);}
+  .work-card p{margin:0;font-size:12.5px;color:var(--text-ink-dim);}
+  .work-tag{
+    display:inline-block;margin-top:8px;font-family:var(--mono);font-size:10.5px;
+    color:var(--gold-deep);background:rgba(240,205,146,0.18);padding:2px 7px;border-radius:5px;
+  }
+
+  /* ---------- education / certs ---------- */
+  .edu-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+  .edu-card{border:1px solid rgba(35,38,47,0.12);border-radius:10px;padding:20px;background:#fff;}
+  .edu-card h4{margin:0 0 4px;font-family:var(--mono);font-size:14px;}
+  .edu-card .edu-sub{font-size:12.5px;color:var(--text-ink-dim);margin-bottom:8px;}
+  .edu-card .edu-meta{font-family:var(--mono);font-size:11px;color:var(--gold-deep);}
+  .cert-list{list-style:none;margin:18px 0 0;padding:0;}
+  .cert-list li{
+    font-family:var(--mono);font-size:13px;color:var(--text-ink-dim);
+    padding:8px 0;border-bottom:1px dashed rgba(35,38,47,0.12);
+  }
+  .cert-list li::before{content:"✓ ";color:var(--pass);font-weight:700;}
+
+  /* ---------- contact ---------- */
+  #contact{background:var(--ink);color:var(--text-light);text-align:center;}
+  #contact .describe{color:var(--gold-dim);}
+  .contact-term{
+    max-width:560px;margin:0 auto;text-align:left;
+    background:var(--ink-soft);border:1px solid rgba(240,205,146,0.18);border-radius:10px;
+    overflow:hidden;
+  }
+  .contact-body{padding:24px;font-family:var(--mono);font-size:13.5px;}
+  .contact-body .line{margin:0 0 9px;color:var(--text-dim);}
+  .contact-body .line b{color:var(--text-light);font-weight:500;}
+  .contact-cta{
+    display:inline-flex;align-items:center;gap:8px;margin-top:20px;
+    font-family:var(--mono);font-size:13px;color:var(--ink);
+    background:var(--gold);padding:11px 22px;border-radius:8px;font-weight:700;
+    transition:.2s;
+  }
+  .contact-cta:hover{background:var(--gold-dim);}
+
+  footer{
+    background:var(--ink);color:var(--text-dim);
+    border-top:1px solid rgba(240,205,146,0.1);
+    padding:22px 0;text-align:center;font-family:var(--mono);font-size:11.5px;
+  }
+  footer span{color:var(--gold-dim);}
+
+  /* ---------- responsive ---------- */
+  @media (max-width:920px){
+    .hero-grid{grid-template-columns:1fr;}
+    .about-grid{grid-template-columns:1fr !important;}
+    .skill-groups{grid-template-columns:1fr 1fr;}
+    .proj-grid{grid-template-columns:1fr;}
+    .work-grid{grid-template-columns:1fr 1fr;}
+    .edu-grid{grid-template-columns:1fr;}
+  }
+  @media (max-width:640px){
+    .nav-links{display:none;}
+    .skill-groups{grid-template-columns:1fr;}
+    .work-grid{grid-template-columns:1fr;}
+    section{padding:60px 0;}
+    .hero{padding:120px 0 60px;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="wrap">
+    <div class="nav-logo">naduni<span>.qa()</span></div>
+    <ul class="nav-links">
+      <li><a href="#about">about</a></li>
+      <li><a href="#skills">skills</a></li>
+      <li><a href="#experience">experience</a></li>
+      <li><a href="#projects">projects</a></li>
+      <li><a href="#education">education</a></li>
+      <li><a href="#contact">contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div class="terminal reveal in">
+      <div class="terminal-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="terminal-title">profile.spec.js — test run</span>
+      </div>
+      <div class="terminal-body">
+        <p class="term-line cmd">npx run profile --who=naduni</p>
+        <p class="suite-line">describe('Naduni Warnakulasooriya')</p>
+        <p class="term-line pass-tag">6+ years in QA automation engineering</p>
+        <p class="term-line pass-tag">Builds AI-powered test &amp; root-cause tooling</p>
+        <p class="term-line pass-tag">Fluent in Selenium, Cypress, Playwright, TestNG</p>
+        <p class="term-line pass-tag">ISTQB Foundation Level certified</p>
+        <p class="term-line pass-tag">Ships CI/CD pipelines on GitHub Actions</p>
+        <p class="suite-result">5 passing — 0 failing <span class="cursor"></span></p>
+      </div>
+    </div>
+
+    <div class="hero-side">
+      <div class="avatar"><img src="images/profile.jpg" alt="Naduni Warnakulasooriya"></div>
+      <div class="eyebrow"><span class="blip"></span> available for opportunities</div>
+      <h1 class="name">Naduni Warnakulasooriya</h1>
+      <p class="role">Software Quality Engineer — Test Automation (SDET), building reliable QA frameworks and AI-assisted testing tools.</p>
+      <div class="hero-meta">
+        <div><b>Based in</b> &nbsp;Maharagama, Sri Lanka</div>
+        <div><b>Currently</b> &nbsp;Hexaware Technologies</div>
+      </div>
+      <div class="social-row">
+        <a class="icon-btn" href="https://github.com/Naduni18" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.91 3.18 9.08 7.6 10.55.56.1.76-.24.76-.54 0-.27-.01-1.16-.02-2.1-3.09.67-3.75-1.32-3.75-1.32-.5-1.28-1.23-1.62-1.23-1.62-1-.69.08-.67.08-.67 1.11.08 1.7 1.14 1.7 1.14.99 1.7 2.6 1.21 3.23.93.1-.72.39-1.21.7-1.49-2.47-.28-5.07-1.23-5.07-5.49 0-1.21.43-2.21 1.14-2.99-.11-.28-.5-1.42.11-2.96 0 0 .93-.3 3.05 1.14a10.6 10.6 0 0 1 5.56 0c2.12-1.44 3.05-1.14 3.05-1.14.61 1.54.22 2.68.11 2.96.71.78 1.14 1.78 1.14 2.99 0 4.27-2.6 5.21-5.08 5.48.4.35.76 1.03.76 2.08 0 1.5-.01 2.71-.01 3.08 0 .3.2.65.77.54a10.53 10.53 0 0 0 7.6-10.55C23.02 5.24 18.27.5 12 .5Z"/></svg>
+        </a>
+        <a class="icon-btn" href="https://www.linkedin.com/in/naduni-warnakulasooriya-06639797" target="_blank" rel="noopener" aria-label="LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.71h.05c.53-1 1.84-2.06 3.79-2.06 4.06 0 4.81 2.67 4.81 6.14V21h-4v-5.6c0-1.34-.02-3.06-1.87-3.06-1.87 0-2.16 1.46-2.16 2.96V21h-4V9Z"/></svg>
+        </a>
+        <a class="icon-btn" href="https://stackoverflow.com/users/7976104/naduni-warnakulasooriya" target="_blank" rel="noopener" aria-label="Stack Overflow">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.36 20.2v-5.38h1.8V22H4.06v-7.18h1.8v5.38h11.5ZM7.7 14.18l.37-1.76 8.85 1.85-.37 1.76-8.85-1.85Zm1.13-4.07.77-1.62 8.2 3.88-.77 1.62-8.2-3.88Zm2.19-3.81 1.21-1.39 6.95 6.04-1.21 1.39-6.95-6.04ZM15.62 2l1.48-1.1 5.31 7.16-1.48 1.1L15.62 2ZM7.55 17.86h8.97v1.8H7.55v-1.8Z"/></svg>
+        </a>
+        <a class="icon-btn" href="mailto:naduni.cv@gmail.com" aria-label="Email">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 5h18a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Zm9 7.2L4.4 7H19.6L12 12.2ZM4 8.4V17h16V8.4l-8 5.4-8-5.4Z"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="describe">describe('about')</div>
+        <h2>Hello there!</h2>
+      </div>
+      <div class="section-count">it × 4</div>
+    </div>
+    <div class="about-grid">
+      <ul class="facts reveal">
+        <li><span class="k">name</span><span class="v">Naduni Peksala Warnakulasooriya</span></li>
+        <li><span class="k">role</span><span class="v">Quality Engineer — Test Automation (SDET)</span></li>
+        <li><span class="k">location</span><span class="v">Maharagama, Sri Lanka</span></li>
+        <li><span class="k">phone</span><span class="v">+94 75 080 2211</span></li>
+        <li><span class="k">email</span><span class="v">naduni.cv@gmail.com</span></li>
+        <li><span class="k">education</span><span class="v">MIT (UCSC) · BSc Physical Science (UoC)</span></li>
+        <li><span class="k">interests</span><span class="v">mathematics, programming, portrait drawing</span></li>
+      </ul>
+      <div class="about-text reveal">
+        <p>I'm a Software Quality Assurance Engineer specializing in automation, with hands-on experience across diverse global teams. I hold a BSc in Physical Science from the University of Colombo and a Master's in Information Technology from UCSC.</p>
+        <p>Over the years I've worked across Hexaware, Virtusa, EY GDS, One Billion Tech and Cenango, contributing to the quality of enterprise systems, mobile apps, and high-traffic web platforms. My toolkit spans Selenium, Cypress, Playwright, Cucumber, SpecFlow, Rest-Assured, and performance tools like JMeter and K6.</p>
+        <p>Lately I've been focused on AI-assisted QA — building self-healing locators, automated root-cause failure analyzers, and tools that turn raw requirements documents into runnable test frameworks. I enjoy taking ownership of QA initiatives end to end, from framework architecture to CI/CD pipeline design.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="dark">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="describe">describe('skills')</div>
+        <h2>Technical stack</h2>
+      </div>
+      <div class="section-count">it × 3</div>
+    </div>
+    <div class="skill-groups">
+      <div class="skill-card reveal">
+        <h3>Languages</h3>
+        <div class="tag-row">
+          <span class="tag">Java</span><span class="tag">C#</span><span class="tag">Python</span>
+          <span class="tag">JavaScript</span><span class="tag">SQL</span><span class="tag">HTML/CSS</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>Frameworks &amp; tools</h3>
+        <div class="tag-row">
+          <span class="tag">Selenium</span><span class="tag">Cypress</span><span class="tag">Playwright</span>
+          <span class="tag">Cucumber</span><span class="tag">SpecFlow</span><span class="tag">TestNG</span>
+          <span class="tag">Rest-Assured</span><span class="tag">JMeter</span><span class="tag">K6</span>
+          <span class="tag">Postman</span><span class="tag">GitHub Actions</span><span class="tag">Jenkins</span>
+          <span class="tag">Docker</span><span class="tag">Maven</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <h3>QA practice</h3>
+        <div class="tag-row">
+          <span class="tag">AI application testing</span><span class="tag">API testing</span>
+          <span class="tag">Performance testing</span><span class="tag">Database testing</span>
+          <span class="tag">Page Object Model</span><span class="tag">Data-driven testing</span>
+          <span class="tag">CI/CD pipelines</span><span class="tag">Manual / E2E / regression</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="describe">describe('experience')</div>
+        <h2>Work history</h2>
+      </div>
+      <div class="section-count">7 suites</div>
+    </div>
+
+    <div class="suite reveal">
+      <div class="suite-head">
+        <div class="suite-head-l"><span class="suite-name">Hexaware Technologies</span><span class="suite-co">Quality Engineer — Test Automation (SDET)</span></div>
+        <span class="suite-time">Jun 2025 – Mar 2026</span>
+      </div>
+      <div class="suite-body"><ul>
+        <li>Built a Selenium/Java test automation framework and led load/stress testing with JMeter</li>
+        <li>Led a 4-member QA automation team across planning, execution, and automation</li>
+        <li>Guided manual testers transitioning into automation via training and code reviews</li>
+        <li>Worked on AI application testing for the Tensai AI/ML automation platform</li>
+      </ul></div>
+    </div>
+
+    <div class="suite reveal">
+      <div class="suite-head">
+        <div class="suite-head-l"><span class="suite-name">Virtusa (Private) Limited</span><span class="suite-co">Software Engineer — QA (Automation)</span></div>
+        <span class="suite-time">Sept 2023 – Jun 2025</span>
+      </div>
+      <div class="suite-body"><ul>
+        <li>Wrote web and API E2E automation scripts (Selenium, Java, Rest-Assured)</li>
+        <li>Maintained regression and smoke suites for ALIP, a life-insurance platform</li>
+        <li>Tracked bugs in Jira and PractiTest; ran Agile ceremonies end to end</li>
+      </ul></div>
+    </div>
+
+    <div class="suite reveal">
+      <div class="suite-head">
+        <div class="suite-head-l"><span class="suite-name">EY GDS (CS) Lanka</span><span class="suite-co">Senior Test Engineer (Automation)</span></div>
+        <span class="suite-time">Jan 2023 – Sept 2023</span>
+      </div>
+      <div class="suite-body"><ul>
+        <li>Authored automation scripts in Selenium, C# and SpecFlow for EY Discover</li>
+        <li>Managed automation code via Git and integrated execution with Azure DevOps pipelines</li>
+      </ul></div>
+    </div>
+
+    <div class="suite reveal">
+      <div class="suite-head">
+        <div class="suite-head-l"><span class="suite-name">One Billion Tech</span><span class="suite-co">Quality Assurance Engineer</span></div>
+        <span class="suite-time">Sept 2021 – Jan 2023</span>
+      </div>
+      <div class="suite-body"><ul>
+        <li>Wrote Selenium/Java/Cucumber scripts for ZIWO-ASWAT and LGIM platforms</li>
+        <li>Built backend API tests with Postman; ran performance testing with K6 and JMeter</li>
+      </ul></div>
+    </div>
+
+    <div class="suite reveal">
+      <div class="suite-head">
+        <div class="suite-head-l"><span class="suite-name">Cenango (Pvt) Ltd</span><span class="suite-co">QA Engineer → Trainee QA Engineer</span></div>
+        <span class="suite-time">Jan 2020 – Sept 2021</span>
+      </div>
+      <div class="suite-body"><ul>
+        <li>Automated and manually tested 8+ client apps: Telemed Networks, Fetch RFID, Hospital Portal, Work Safe, Likely, My Van, Scrubby</li>
+        <li>Built Selenium/Java/Cypress scripts, database tests (PostgreSQL), and ER/data-flow diagrams</li>
+      </ul></div>
+    </div>
+
+    <div class="suite reveal">
+      <div class="suite-head">
+        <div class="suite-head-l"><span class="suite-name">Government Schools</span><span class="suite-co">Mathematics &amp; IT Teacher</span></div>
+        <span class="suite-time">Oct 2014 – Jul 2017</span>
+      </div>
+      <div class="suite-body"><ul>
+        <li>Taught Combined Mathematics and Science for Technology</li>
+      </ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="dark">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="describe">describe('projects')</div>
+        <h2>Featured builds</h2>
+      </div>
+      <div class="section-count">it × 5</div>
+    </div>
+
+    <div class="proj-grid">
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <span class="proj-title">AI Test Agent — ScriptCastle V2</span>
+          <a class="proj-link" href="https://github.com/Naduni18/SCRiPTCASTLE-V2" target="_blank" rel="noopener">github →</a>
+        </div>
+        <p class="proj-desc">Desktop QA tool that uses Claude to generate test cases, frameworks, and runnable scripts directly from uploaded requirements docs. Modular per-module pipeline supports Cypress and Playwright as interchangeable targets, plus self-healing locators and an AI root-cause analyzer baked into every generated framework.</p>
+        <p class="proj-stack">Electron · Node.js · Claude API · Cypress · Playwright</p>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <span class="proj-title">AI Root Cause Analyzer</span>
+          <a class="proj-link" href="https://github.com/Naduni18/cypress-ai-root-cause-analyzer" target="_blank" rel="noopener">github →</a>
+        </div>
+        <p class="proj-desc">Cypress framework wired into GitHub Actions that inspects failed logs, screenshots, stack traces, and console errors, then classifies failures as product bugs, script issues, or environment/data problems with suggested fixes — posted straight to the PR.</p>
+        <p class="proj-stack">Cypress · GitHub Actions · AI</p>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <span class="proj-title">Self-Healing Cypress Framework</span>
+          <a class="proj-link" href="https://github.com/Naduni18/self-healing-cypress-framework" target="_blank" rel="noopener">github →</a>
+        </div>
+        <p class="proj-desc">Cypress framework with a JS self-healing layer that audits scripts and flags only genuinely fragile selectors, cutting down false positives from stylistic preference flags.</p>
+        <p class="proj-stack">Cypress · JavaScript</p>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <span class="proj-title">Selenium · Java · Cucumber</span>
+          <a class="proj-link" href="https://github.com/Naduni18/portfoili_project_1.git" target="_blank" rel="noopener">github →</a>
+        </div>
+        <p class="proj-desc">Page Object Model framework with Excel data-driven testing, Extent Reports, and TestNG for orchestration.</p>
+        <p class="proj-stack">Java · Selenium · Cucumber · TestNG</p>
+      </div>
+
+      <div class="proj-card reveal">
+        <div class="proj-top">
+          <span class="proj-title">AI Test-Case Chatbot</span>
+          <a class="proj-link" href="https://github.com/Naduni18/requirement-testcase-chatbot" target="_blank" rel="noopener">github →</a>
+        </div>
+        <p class="proj-desc">A chatbot that generates structured test cases directly from a requirements document.</p>
+        <p class="proj-stack">AI · NLP</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROFESSIONAL PROJECTS -->
+<section id="work">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="describe">describe('professional projects')</div>
+        <h2>Tested in production</h2>
+      </div>
+      <div class="section-count">it × 9</div>
+    </div>
+    <div class="work-grid">
+      <div class="work-card reveal"><h4>Tensai</h4><p>AI/ML &amp; GenAI enterprise IT automation platform — Hexaware</p><span class="work-tag">AI app testing</span></div>
+      <div class="work-card reveal"><h4>ALIP</h4><p>Life insurance management system, New York Life — Virtusa</p><span class="work-tag">Automation</span></div>
+      <div class="work-card reveal"><h4>EY Discover</h4><p>Internal work management system — EY GDS</p><span class="work-tag">Automation</span></div>
+      <div class="work-card reveal"><h4>ZIWO – ASWAT</h4><p>Call center application for a UAE client — One Billion Tech</p><span class="work-tag">Manual QA</span></div>
+      <div class="work-card reveal"><h4>LGIM</h4><p>Investment management system, Legal &amp; General Group — One Billion Tech</p><span class="work-tag">Automation</span></div>
+      <div class="work-card reveal"><h4>Telemed Networks</h4><p>Online doctor consultation app, US client — Cenango</p><span class="work-tag">Selenium + manual</span></div>
+      <div class="work-card reveal"><h4>Hospital &amp; Patient Portal</h4><p>Appointment scheduling app — Cenango</p><span class="work-tag">Selenium + manual</span></div>
+      <div class="work-card reveal"><h4>Fetch RFID</h4><p>Storage management with RFID tracking — Cenango</p><span class="work-tag">Manual QA</span></div>
+      <div class="work-card reveal"><h4>Likely / My Van / Work Safe / Scrubby</h4><p>Dating, school-van, body-temp &amp; crowd-tracking apps — Cenango</p><span class="work-tag">Manual QA</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education" class="dark">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <div>
+        <div class="describe">describe('education & certifications')</div>
+        <h2>Credentials</h2>
+      </div>
+      <div class="section-count">it × 6</div>
+    </div>
+    <div class="edu-grid">
+      <div class="edu-card reveal">
+        <h4>Master of Information Technology</h4>
+        <p class="edu-sub">University of Colombo School of Computing (UCSC)</p>
+        <p class="edu-meta">2016 – 2020 · GPA 3.02</p>
+      </div>
+      <div class="edu-card reveal">
+        <h4>BSc, Physical Science</h4>
+        <p class="edu-sub">University of Colombo — Applied Maths, Chemistry, Statistics, Computer Science</p>
+        <p class="edu-meta">2010 – 2014</p>
+      </div>
+    </div>
+    <ul class="cert-list reveal">
+      <li>ISTQB Foundation Level — Certified Tester (FL-CT Core, v2018)</li>
+      <li>Selenium WebDriver with Java — Basics to Advanced + Frameworks, Rahul Shetty</li>
+      <li>Python Django — The Practical Guide, Maximilian Schwarzmüller</li>
+      <li>AI/Gen AI Advanced — Hexaware</li>
+      <li>Virtusa Certified GenAI Assisted Engineer</li>
+      <li>The Complete 'No-Code' ChatGPT &amp; OpenAI API Course</li>
+    </ul>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="describe reveal">describe('contact')</div>
+    <h2 style="font-family:var(--mono);font-weight:700;font-size:26px;margin:6px 0 30px;">Let's work together</h2>
+    <div class="contact-term reveal">
+      <div class="terminal-bar">
+        <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+        <span class="terminal-title">contact.json</span>
+      </div>
+      <div class="contact-body">
+        <p class="line cmd">cat contact.json</p>
+        <p class="line">"email": <b>naduni.cv@gmail.com</b></p>
+        <p class="line">"phone": <b>+94 75 080 2211</b></p>
+        <p class="line">"location": <b>Maharagama, Sri Lanka</b></p>
+        <p class="line">"status": <b>open to new roles</b></p>
+        <a class="contact-cta" href="mailto:naduni.cv@gmail.com">✓ send an email</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© Naduni Peksala Warnakulasooriya — built with care, tested with <span>assert.equal(quality, "high")</span></div>
+</footer>
+
+<script>
+  // scroll reveal
+  const els = document.querySelectorAll('.reveal');
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} });
+  }, {threshold:0.12});
+  els.forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
